@@ -30,7 +30,7 @@ def search(query, df, vectorizer, tfidf_matrix, top_k=10):
     if matched_terms:
         term_indices = [vocab[t] for t in matched_terms]
         tfidf_scores = np.array(
-            tfidf_matrix[:, term_indices].mean(axis=1)
+            tfidf_matrix[:, term_indices].sum(axis=1)
         ).flatten()
 
     # Ambil top_k berdasarkan cosine
