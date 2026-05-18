@@ -13,7 +13,6 @@ except FileNotFoundError:
     df = pd.read_csv("data/produk_tokopedia.csv")
     df = preprocess_dataframe(df)
     df.to_csv("data/produk_clean.csv", index=False)
-    print("Preprocessing selesai, disimpan ke produk_clean.csv")
 
 vectorizer, tfidf_matrix = build_index(df)
 
@@ -38,4 +37,4 @@ def search_result():
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 8000))
-    app.run(host="0.0.0.0", port=port, debug=False)
+    app.run(debug=True, port=port)
