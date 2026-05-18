@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Hasil: {{ query }}</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;800&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="/static/style.css"/>
+</head>
+<body>
+  <div class="noise"></div>
+
+  <header class="topbar">
+    <a href="/" class="logo">IR<span class="accent">.</span>Tokopedia</a>
+    <form action="/search" method="POST" class="topbar-form">
+      <div class="input-wrap small">
+        <span class="input-icon">⌕</span>
+        <input type="text" name="query" value="{{ query }}" autocomplete="off" required/>
+      </div>
+      <select name="top_k" class="select-inline">
+        <option value="10">10</option>
+        <option value="20">20</option>
+        <option value="50">50</option>
+      </select>
+      <button type="submit" class="btn-search small">Cari</button>
+    </form>
+  </header>
+
+  <div class="result-layout">
+
+    <!-- Sidebar Metrik -->
+    <aside class="sidebar">
+      <div class="sidebar-title">Evaluasi</div>
+
+      <div class="metric-card">
+        <div class="metric-label">Query</div>
+        <div class="metric-value query-text">"{{ query }}"</div>
+      </div>
+
+      <div class="metric-card highlight">
+        <div class="metric-label">Precision</div>
+        <div class="metric-value big">{{ precision }}</div>
+        <div class="metric-desc">Relevan / Total ditampilkan</div>
+      </div>
+
+      <div class="metric-card highlight">
+        <div class="metric-label">Recall</div>
+        <div class="metric-value big">{{ recall }}</div>
+        <div class="metric-desc">Relevan ditemukan / Total relevan</div>
+      </div>
+
+      <div class="metric-card">
+        <div class="metric-label">Total Hasil</div>
+        <div class="metric-value big accent">{{ total }}</div>
+      </div>
+
+      <div class="metric-card">
+        <div class="metric-label">Metode</div>
+        <div class="metric-tags">
+          <span class="tag">TF-IDF</span>
+          <span class="tag">Cosine Similarity</span>
+        </div>
+      </div>
+
+      <a href="/" class="btn-back">← Cari Lagi</a>
+    </aside>
+
+    <!-- Tabel Hasil -->
+    <section class="results">
+      <div class="results-header">
+        <h2>Hasil pencarian <span class="accent">"{{ query }}"</span></h2>
+        <span class="results-count">{{ total }} produk ditemukan</span>
+      </div>
+
+      {% if results %}
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Nama Produk</th>
+              <th>Keyword</th>
+              <th>Harga</th>
+              <th>Rating</th>
+              <th>Toko</th>
+              <th>Skor Cosine</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for row in results %}
+            <tr class="result-row">
+              <td class="num">{{ loop.index }}</td>
+              <td class="product-name">
+                {% if row.url %}
+                  <a href="{{ row.url }}" target="_blank" rel="noopener">{{ row.product_name }}</a>
+                {% else %}
+                  {{ row.product_name }}
+                {% endif %}
+              </td>
+              <td><span class="tag small">{{ row.keyword }}</span></td>
+              <td class="price">
+                {% if row.price %}
+                  Rp{{ "{:,.0f}".format(row.price) }}
+                {% else %}
+                  -
+                {% endif %}
+              </td>
+              <td class="rating">
+                {% if row.rating %}
+                  ★ {{ row.rating }}
+                {% else %}
+                  -
+                {% endif %}
+              </td>
+              <td class="shop">{{ row['shop.name'] }}</td>
+              <td>
+                <div class="score-wrap">
+                  <div class="score-bar">
+                    <div class="score-fill" style="width: {{ (row.score * 100)|round(1) }}%"></div>
+                  </div>
+                  <span class="score-num">{{ "%.4f"|format(row.score) }}</span>
+                </div>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {% else %}
+      <div class="empty">
+        <div class="empty-icon">∅</div>
+        <p>Tidak ada produk relevan untuk query <strong>"{{ query }}"</strong>.</p>
+        <a href="/" class="btn-back">Coba query lain</a>
+      </div>
+      {% endif %}
+    </section>
+  </div>
+
+  <footer class="footer">
+    <span>Kelompok 3 · Information Retrieval · Fasilkom UNEJ 2026</span>
+  </footer>
+</body>
+</html>

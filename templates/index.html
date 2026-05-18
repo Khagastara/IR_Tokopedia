@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>IR Tokopedia</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;800&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="/static/style.css"/>
+</head>
+<body>
+  <div class="noise"></div>
+
+  <main class="hero">
+    <div class="badge">TF-IDF · Cosine Similarity</div>
+    <h1 class="title">
+      <span class="title-line">Sistem</span>
+      <span class="title-line accent">Information</span>
+      <span class="title-line">Retrieval</span>
+    </h1>
+    <p class="subtitle">Pencarian katalog produk Tokopedia berbasis pembobotan kata dan kemiripan vektor.</p>
+
+    <form action="/search" method="POST" class="search-form">
+      <div class="input-wrap">
+        <span class="input-icon">⌕</span>
+        <input
+          type="text"
+          name="query"
+          placeholder="Ketik nama produk..."
+          autocomplete="off"
+          required
+        />
+      </div>
+      <div class="form-bottom">
+        <div class="select-wrap">
+          <label>Tampilkan</label>
+          <select name="top_k">
+            <option value="10">10 hasil</option>
+            <option value="20">20 hasil</option>
+            <option value="50">50 hasil</option>
+          </select>
+        </div>
+        <button type="submit" class="btn-search">
+          <span>Cari</span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </button>
+      </div>
+    </form>
+
+    <div class="chips">
+      <span class="chip-label">Coba:</span>
+      <button type="button" class="chip" onclick="fillQuery('laptop asus')">laptop asus</button>
+      <button type="button" class="chip" onclick="fillQuery('kopi arabica')">kopi arabica</button>
+      <button type="button" class="chip" onclick="fillQuery('sepatu nike')">sepatu nike</button>
+      <button type="button" class="chip" onclick="fillQuery('headphone gaming')">headphone gaming</button>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <span>Kelompok 3 · Information Retrieval · Fasilkom UNEJ 2026</span>
+  </footer>
+
+  <script>
+    function fillQuery(text) {
+      document.querySelector('input[name="query"]').value = text;
+      document.querySelector('input[name="query"]').focus();
+    }
+  </script>
+</body>
+</html>
