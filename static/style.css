@@ -456,7 +456,8 @@ td.shop { color: var(--muted); font-size: 11px; max-width: 120px; }
   white-space: nowrap;
   min-width: 48px;
 }
-
+.score-fill.tfidf { background: #7c6aff; }
+.score-num.tfidf  { color: #7c6aff; }
 /* ── Empty State ── */
 .empty {
   display: flex;

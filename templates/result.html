@@ -75,55 +75,64 @@
       {% if results %}
       <div class="table-wrap">
         <table>
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>Nama Produk</th>
-              <th>Keyword</th>
-              <th>Harga</th>
-              <th>Rating</th>
-              <th>Toko</th>
-              <th>Skor Cosine</th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for row in results %}
-            <tr class="result-row">
-              <td class="num">{{ loop.index }}</td>
-              <td class="product-name">
-                {% if row.url %}
-                  <a href="{{ row.url }}" target="_blank" rel="noopener">{{ row.product_name }}</a>
-                {% else %}
-                  {{ row.product_name }}
-                {% endif %}
-              </td>
-              <td><span class="tag small">{{ row.keyword }}</span></td>
-              <td class="price">
-                {% if row.price %}
-                  Rp{{ "{:,.0f}".format(row.price) }}
-                {% else %}
-                  -
-                {% endif %}
-              </td>
-              <td class="rating">
-                {% if row.rating %}
-                  ★ {{ row.rating }}
-                {% else %}
-                  -
-                {% endif %}
-              </td>
-              <td class="shop">{{ row['shop.name'] }}</td>
-              <td>
-                <div class="score-wrap">
-                  <div class="score-bar">
-                    <div class="score-fill" style="width: {{ (row.score * 100)|round(1) }}%"></div>
-                  </div>
-                  <span class="score-num">{{ "%.4f"|format(row.score) }}</span>
-                </div>
-              </td>
-            </tr>
-            {% endfor %}
-          </tbody>
+            <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Nama Produk</th>
+                  <th>Keyword</th>
+                  <th>Harga</th>
+                  <th>Rating</th>
+                  <th>Toko</th>
+                  <th>Skor TF-IDF</th>
+                  <th>Skor Cosine</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in results %}
+                <tr class="result-row">
+                  <td class="num">{{ loop.index }}</td>
+                  <td class="product-name">
+                    {% if row.url %}
+                      <a href="{{ row.url }}" target="_blank" rel="noopener">{{ row.product_name }}</a>
+                    {% else %}
+                      {{ row.product_name }}
+                    {% endif %}
+                  </td>
+                  <td><span class="tag small">{{ row.keyword }}</span></td>
+                  <td class="price">
+                    {% if row.price %}
+                      Rp{{ "{:,.0f}".format(row.price) }}
+                    {% else %}
+                      -
+                    {% endif %}
+                  </td>
+                  <td class="rating">
+                    {% if row.rating %}
+                      ★ {{ row.rating }}
+                    {% else %}
+                      -
+                    {% endif %}
+                  </td>
+                  <td class="shop">{{ row['shop.name'] }}</td>
+                  <td>
+                    <div class="score-wrap">
+                      <div class="score-bar">
+                        <div class="score-fill tfidf" style="width: {{ ([row.tfidf_score * 100, 100] | min)|round(1) }}%"></div>
+                      </div>
+                      <span class="score-num tfidf">{{ "%.4f"|format(row.tfidf_score) }}</span>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="score-wrap">
+                      <div class="score-bar">
+                        <div class="score-fill" style="width: {{ (row.cosine_score * 100)|round(1) }}%"></div>
+                      </div>
+                      <span class="score-num">{{ "%.4f"|format(row.cosine_score) }}</span>
+                    </div>
+                  </td>
+                </tr>
+                {% endfor %}
+            </tbody>
         </table>
       </div>
       {% else %}
