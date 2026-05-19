@@ -28,7 +28,7 @@
 
   <div class="result-layout">
 
-    <!-- Sidebar Metrik -->
+    <!-- Sidebar -->
     <aside class="sidebar">
       <div class="sidebar-title">Evaluasi</div>
 
@@ -54,6 +54,26 @@
         <div class="metric-value big accent">{{ total }}</div>
       </div>
 
+      {% if term_weights %}
+      <div class="metric-card tfidf-card">
+        <div class="metric-label">Bobot TF-IDF per Kata</div>
+        <div class="term-list">
+          {% set max_score = term_weights[0].score %}
+          {% for t in term_weights %}
+          <div class="term-row">
+            <span class="term-word">{{ t.term }}</span>
+            <div class="term-bar-wrap">
+              <div class="term-bar">
+                <div class="term-fill" style="width: {{ ((t.score / max_score) * 100)|round(1) }}%"></div>
+              </div>
+              <span class="term-score">{{ t.score }}</span>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+      {% endif %}
+
       <div class="metric-card">
         <div class="metric-label">Metode</div>
         <div class="metric-tags">
@@ -65,7 +85,7 @@
       <a href="/" class="btn-back">← Cari Lagi</a>
     </aside>
 
-    <!-- Tabel Hasil -->
+    <!-- Results -->
     <section class="results">
       <div class="results-header">
         <h2>Hasil pencarian <span class="accent">"{{ query }}"</span></h2>
@@ -75,64 +95,55 @@
       {% if results %}
       <div class="table-wrap">
         <table>
-            <thead>
-                <tr>
-                  <th>#</th>
-                  <th>Nama Produk</th>
-                  <th>Keyword</th>
-                  <th>Harga</th>
-                  <th>Rating</th>
-                  <th>Toko</th>
-                  <th>Skor TF-IDF</th>
-                  <th>Skor Cosine</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for row in results %}
-                <tr class="result-row">
-                  <td class="num">{{ loop.index }}</td>
-                  <td class="product-name">
-                    {% if row.url %}
-                      <a href="{{ row.url }}" target="_blank" rel="noopener">{{ row.product_name }}</a>
-                    {% else %}
-                      {{ row.product_name }}
-                    {% endif %}
-                  </td>
-                  <td><span class="tag small">{{ row.keyword }}</span></td>
-                  <td class="price">
-                    {% if row.price %}
-                      Rp{{ "{:,.0f}".format(row.price) }}
-                    {% else %}
-                      -
-                    {% endif %}
-                  </td>
-                  <td class="rating">
-                    {% if row.rating %}
-                      ★ {{ row.rating }}
-                    {% else %}
-                      -
-                    {% endif %}
-                  </td>
-                  <td class="shop">{{ row['shop.name'] }}</td>
-                  <td>
-                    <div class="score-wrap">
-                      <div class="score-bar">
-                        <div class="score-fill tfidf" style="width: {{ ([row.tfidf_score * 100, 100] | min)|round(1) }}%"></div>
-                      </div>
-                      <span class="score-num tfidf">{{ "%.4f"|format(row.tfidf_score) }}</span>
-                    </div>
-                  </td>
-                  <td>
-                    <div class="score-wrap">
-                      <div class="score-bar">
-                        <div class="score-fill" style="width: {{ (row.cosine_score * 100)|round(1) }}%"></div>
-                      </div>
-                      <span class="score-num">{{ "%.4f"|format(row.cosine_score) }}</span>
-                    </div>
-                  </td>
-                </tr>
-                {% endfor %}
-            </tbody>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Nama Produk</th>
+              <th>Keyword</th>
+              <th>Harga</th>
+              <th>Rating</th>
+              <th>Toko</th>
+              <th>Skor Cosine</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for row in results %}
+            <tr class="result-row">
+              <td class="num">{{ loop.index }}</td>
+              <td class="product-name">
+                {% if row.url %}
+                  <a href="{{ row.url }}" target="_blank" rel="noopener">{{ row.product_name }}</a>
+                {% else %}
+                  {{ row.product_name }}
+                {% endif %}
+              </td>
+              <td><span class="tag small">{{ row.keyword }}</span></td>
+              <td class="price">
+                {% if row.price %}
+                  Rp{{ "{:,.0f}".format(row.price) }}
+                {% else %}
+                  -
+                {% endif %}
+              </td>
+              <td class="rating">
+                {% if row.rating %}
+                  ★ {{ row.rating }}
+                {% else %}
+                  -
+                {% endif %}
+              </td>
+              <td class="shop">{{ row['shop.name'] }}</td>
+              <td>
+                <div class="score-wrap">
+                  <div class="score-bar">
+                    <div class="score-fill" style="width: {{ (row.cosine_score * 100)|round(1) }}%"></div>
+                  </div>
+                  <span class="score-num">{{ "%.4f"|format(row.cosine_score) }}</span>
+                </div>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
         </table>
       </div>
       {% else %}

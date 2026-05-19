@@ -456,8 +456,7 @@ td.shop { color: var(--muted); font-size: 11px; max-width: 120px; }
   white-space: nowrap;
   min-width: 48px;
 }
-.score-fill.tfidf { background: #7c6aff; }
-.score-num.tfidf  { color: #7c6aff; }
+
 /* ── Empty State ── */
 .empty {
   display: flex;
@@ -484,6 +483,56 @@ td.shop { color: var(--muted); font-size: 11px; max-width: 120px; }
   font-size: 11px;
   letter-spacing: 0.08em;
   border-top: 1px solid var(--border);
+}
+
+/* ── TF-IDF Term Weights ── */
+.tfidf-card { border-color: rgba(124,106,255,0.25); background: rgba(124,106,255,0.04); }
+
+.term-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.term-row {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.term-word {
+  font-size: 11px;
+  color: var(--text);
+  letter-spacing: 0.05em;
+}
+
+.term-bar-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.term-bar {
+  flex: 1;
+  height: 4px;
+  background: var(--surface2);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.term-fill {
+  height: 100%;
+  background: #7c6aff;
+  border-radius: 2px;
+  transition: width 0.6s ease;
+}
+
+.term-score {
+  font-size: 10px;
+  color: #7c6aff;
+  min-width: 44px;
+  text-align: right;
 }
 
 /* ── Animations ── */

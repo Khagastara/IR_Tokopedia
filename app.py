@@ -25,14 +25,17 @@ def search_result():
     query = request.form.get("query", "").strip()
     top_k = int(request.form.get("top_k", 10))
 
-    results, precision, recall = search(query, df, vectorizer, tfidf_matrix, top_k)
+    results, precision, recall, term_weights = search(
+        query, df, vectorizer, tfidf_matrix, top_k
+    )
 
     return render_template("result.html",
         query=query,
         results=results.to_dict(orient="records"),
         precision=round(precision, 4),
         recall=round(recall, 4),
-        total=len(results)
+        total=len(results),
+        term_weights=term_weights
     )
 
 if __name__ == "__main__":
