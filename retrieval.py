@@ -5,7 +5,9 @@ from sklearn.metrics.pairwise import cosine_similarity
 from preprocessing import preprocess, preprocess_dataframe
 
 def build_index(df):
-    vectorizer = TfidfVectorizer()
+    vectorizer = TfidfVectorizer(
+        token_pattern=r"(?u)\b\w+\b"
+    )
     tfidf_matrix = vectorizer.fit_transform(df["document_clean"])
     return vectorizer, tfidf_matrix
 
