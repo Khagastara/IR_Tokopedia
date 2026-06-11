@@ -42,7 +42,11 @@ def search(query, df, vectorizer, tfidf_matrix, top_k=10):
     return results, precision, recall, term_weights
 
 def evaluate(results, scores, top_k):
-    total_relevan_retrieved = len(results)
+    if len(results) == 0:
+        return 0.0, 0.0
+
+    mean_score = results["cosine_score"].mean()
+    total_relevan_retrieved = (results["cosine_score"] >= mean_score).sum()
     total_retrieved         = top_k
     total_relevan_tersedia  = (scores > 0).sum()
 
