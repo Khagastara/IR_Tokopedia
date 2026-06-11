@@ -41,7 +41,7 @@ def search(query, df, vectorizer, tfidf_matrix, top_k=10):
 
 def evaluate(results, scores, top_k):
     total_relevan_retrieved = len(results)
-    total_retrieved         = len(results)
+    total_retrieved         = top_k
     total_relevan_tersedia  = (scores > 0).sum()
 
     precision = (

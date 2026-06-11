@@ -2,11 +2,13 @@ import re
 import pandas as pd
 from Sastrawi.Stemmer.StemmerFactory import StemmerFactory
 from Sastrawi.StopWordRemover.StopWordRemoverFactory import StopWordRemoverFactory
+from tqdm import tqdm
+tqdm.pandas()
 
-factory = StemmerFactory()
-stemmer = factory.create_stemmer()
+factory     = StemmerFactory()
+stemmer     = factory.create_stemmer()
 
-stop_factory = StopWordRemoverFactory()
+stop_factory    = StopWordRemoverFactory()
 stopword_remover = stop_factory.create_stop_word_remover()
 
 def preprocess(text):
@@ -14,8 +16,11 @@ def preprocess(text):
         return ""
 
     text = text.lower()
-    text = re.sub(r"[^a-z\s]", " ", text)
+    # Pertahankan huruf, angka, dan spasi
+    text = re.sub(r"[^a-z0-9\s]", " ", text)
+    # Stopword removal (hanya kata, angka dibiarkan)
     text = stopword_remover.remove(text)
+    # Stemming
     text = stemmer.stem(text)
     text = re.sub(r"\s+", " ", text).strip()
 
@@ -29,13 +34,12 @@ def preprocess_dataframe(df):
     df = df.drop_duplicates(subset=["product_name"])
     df = df.reset_index(drop=True)
 
-    # Gunakan product_name + keyword sebagai dokumen teks utama
     df["document"] = (
         df["product_name"].fillna("") + " " +
         df["keyword"].fillna("")
     )
 
-    df["document_clean"] = df["document"].apply(preprocess)
+    df["document_clean"] = df["document"].progress_apply(preprocess)
 
     df = df[df["document_clean"].str.strip() != ""]
     df = df.reset_index(drop=True)
